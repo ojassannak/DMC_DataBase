@@ -1,0 +1,736 @@
+Microsoft Windows [Version 10.0.18362.1316]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\Users\duasp>"C:\Program Files\MySQL\MySQL Server 9.0\bin\mysql.exe" -u root -p
+Enter password: *****
+ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost:3306' (10061)
+
+C:\Users\duasp>"C:\Program Files\MySQL\MySQL Server 9.0\bin\mysql.exe" -u root -p
+Enter password: *****
+ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost:3306' (10061)
+
+C:\Users\duasp>"C:\Program Files\MySQL\MySQL Server 9.0\bin\mysql.exe" -u root -p --port 3307
+Enter password: *****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 9.0.1 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    ->
+    -> ^Z^C
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> create database dronoctdb;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use dronoctdb
+Database changed
+mysql> create table emp(empid integer,ename varchar(20),salary integer,hiredate date,address varchar(10),managerid integer);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table dept(deptid integer,dname varchar(20));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc emp;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| empid     | int         | YES  |     | NULL    |       |
+| ename     | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| hiredate  | date        | YES  |     | NULL    |       |
+| address   | varchar(10) | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> desc dept;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| deptid | int         | YES  |     | NULL    |       |
+| dname  | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> alter table emp add (deptid integer);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp add constraint primary key(empid);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp add constraint primary key(deptid);
+ERROR 1068 (42000): Multiple primary key defined
+mysql> alter table dept add constraint primary key(deptid);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp add constraint fkemp foreign key(deptid) references dept(deptid;)
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+    -> alter table emp add constraint fkemp foreign key(deptid) references dept(deptid);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')
+alter table emp add constraint fkemp foreign key(deptid) references dept(depti' at line 1
+mysql> alter table emp add constraint fkemp foreign key(deptid) references dept(deptid);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| empid     | int         | NO   | PRI | NULL    |       |
+| ename     | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| hiredate  | date        | YES  |     | NULL    |       |
+| address   | varchar(10) | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
+| deptid    | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc dept;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| deptid | int         | NO   | PRI | NULL    |       |
+| dname  | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into dept values(10,'HR');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from dept;
++--------+-------+
+| deptid | dname |
++--------+-------+
+|     10 | HR    |
++--------+-------+
+1 row in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from dept;
++--------+-------+
+| deptid | dname |
++--------+-------+
+|     10 | HR    |
++--------+-------+
+1 row in set (0.00 sec)
+
+mysql> set autocommit=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into dept values(110,'Accounts');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from dept;
++--------+----------+
+| deptid | dname    |
++--------+----------+
+|     10 | HR       |
+|    110 | Accounts |
++--------+----------+
+2 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from dept;
++--------+-------+
+| deptid | dname |
++--------+-------+
+|     10 | HR    |
++--------+-------+
+1 row in set (0.00 sec)
+
+mysql> insert into dept values(40,'Sales')
+    -> insert into dept values(40,'Sales');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into dept values(40,'Sales')' at line 2
+mysql> insert into dept values(40,'Sales');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values(50,'IT Operations');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values(30,'Insurance');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from dept;
++--------+---------------+
+| deptid | dname         |
++--------+---------------+
+|     10 | HR            |
+|     30 | Insurance     |
+|     40 | Sales         |
+|     50 | IT Operations |
++--------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from dept;
++--------+---------------+
+| deptid | dname         |
++--------+---------------+
+|     10 | HR            |
+|     30 | Insurance     |
+|     40 | Sales         |
+|     50 | IT Operations |
++--------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into dept values(20,'Accounts');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from dept
+    -> select * from dept;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select * from dept' at line 2
+mysql> select * from dept;
++--------+---------------+
+| deptid | dname         |
++--------+---------------+
+|     10 | HR            |
+|     20 | Accounts      |
+|     30 | Insurance     |
+|     40 | Sales         |
+|     50 | IT Operations |
++--------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from dept;
++--------+---------------+
+| deptid | dname         |
++--------+---------------+
+|     10 | HR            |
+|     30 | Insurance     |
+|     40 | Sales         |
+|     50 | IT Operations |
++--------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into dept values(30,;Insurance');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+    '>
+    '> ^Z
+Bye
+
+C:\Users\duasp>"C:\Program Files\MySQL\MySQL Server 9.0\bin\mysql.exe" -u root -p --port 3307
+Enter password: *****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 9.0.1 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select * from dept;
+ERROR 1046 (3D000): No database selected
+mysql>  Create database dronoctdb;
+ERROR 1007 (HY000): Can't create database 'dronoctdb'; database exists
+mysql> create database dronoctdb;
+ERROR 1007 (HY000): Can't create database 'dronoctdb'; database exists
+mysql> use dronoctdb
+Database changed
+mysql> desc emp;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| empid     | int         | NO   | PRI | NULL    |       |
+| ename     | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| hiredate  | date        | YES  |     | NULL    |       |
+| address   | varchar(10) | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
+| deptid    | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc dept;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| deptid | int         | NO   | PRI | NULL    |       |
+| dname  | varchar(20) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from dept;
++--------+---------------+
+| deptid | dname         |
++--------+---------------+
+|     10 | HR            |
+|     30 | Insurance     |
+|     40 | Sales         |
+|     50 | IT Operations |
++--------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from emp;
+Empty set (0.00 sec)
+
+mysql> insert into emp values(101,'king',50000,'2020-09-09',Delhi,NULL,10);
+ERROR 1054 (42S22): Unknown column 'Delhi' in 'field list'
+mysql> insert into emp values(101,'king',50000,'2020-09-09','Delhi',NULL,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(102,'john',45000,'2020-10-09','Pune',101,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(103,'jay',40000,'2021-10-09','Mumbai',102,40);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp;
++-------+-------+--------+------------+---------+-----------+--------+
+| empid | ename | salary | hiredate   | address | managerid | deptid |
++-------+-------+--------+------------+---------+-----------+--------+
+|   101 | king  |  50000 | 2020-09-09 | Delhi   |      NULL |     10 |
+|   102 | john  |  45000 | 2020-10-09 | Pune    |       101 |     10 |
+|   103 | jay   |  40000 | 2021-10-09 | Mumbai  |       102 |     40 |
++-------+-------+--------+------------+---------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> insert into emp values(104,'Raj',25000,'2020-08-09',Nagpur,101,30);
+ERROR 1054 (42S22): Unknown column 'Nagpur' in 'field list'
+mysql> insert into emp values(104,'Raj',25000,'2020-08-09','Nagpur',101,30);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++-------+-------+--------+------------+---------+-----------+--------+
+| empid | ename | salary | hiredate   | address | managerid | deptid |
++-------+-------+--------+------------+---------+-----------+--------+
+|   101 | king  |  50000 | 2020-09-09 | Delhi   |      NULL |     10 |
+|   102 | john  |  45000 | 2020-10-09 | Pune    |       101 |     10 |
+|   103 | jay   |  40000 | 2021-10-09 | Mumbai  |       102 |     40 |
+|   104 | Raj   |  25000 | 2020-08-09 | Nagpur  |       101 |     30 |
++-------+-------+--------+------------+---------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> set autocommit=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from emp;
+Query OK, 4 rows affected (0.00 sec)
+
+mysql> select * from emp;
+Empty set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp;
++-------+-------+--------+------------+---------+-----------+--------+
+| empid | ename | salary | hiredate   | address | managerid | deptid |
++-------+-------+--------+------------+---------+-----------+--------+
+|   101 | king  |  50000 | 2020-09-09 | Delhi   |      NULL |     10 |
+|   102 | john  |  45000 | 2020-10-09 | Pune    |       101 |     10 |
+|   103 | jay   |  40000 | 2021-10-09 | Mumbai  |       102 |     40 |
+|   104 | Raj   |  25000 | 2020-08-09 | Nagpur  |       101 |     30 |
++-------+-------+--------+------------+---------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select'1' from emp;
++---+
+| 1 |
++---+
+| 1 |
+| 1 |
+| 1 |
+| 1 |
++---+
+4 rows in set (0.00 sec)
+
+mysql> select '1000' from emp;
++------+
+| 1000 |
++------+
+| 1000 |
+| 1000 |
+| 1000 |
+| 1000 |
++------+
+4 rows in set (0.00 sec)
+
+mysql> select 'A' from emp;
++---+
+| A |
++---+
+| A |
+| A |
+| A |
+| A |
++---+
+4 rows in set (0.00 sec)
+
+mysql> select currnt_date();
+ERROR 1305 (42000): FUNCTION dronoctdb.currnt_date does not exist
+mysql> select current_date();
++----------------+
+| current_date() |
++----------------+
+| 2024-10-09     |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select concat current_date();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'current_date()' at line 1
+mysql> select concat current_date('hello','world');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'current_date('hello','world')' at line 1
+mysql> select concat('hello','world');
++-------------------------+
+| concat('hello','world') |
++-------------------------+
+| helloworld              |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> select concat('hello',' 'world');
+    '> select concat('hello',' world');
+    '> select concat('hello','  world');
+    '>
+    '>
+    '> ^C
+mysql> select concat('hello',' world');
++--------------------------+
+| concat('hello',' world') |
++--------------------------+
+| hello world              |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select concat(ename,concat('has',salary) from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from emp' at line 1
+mysql> select concat(ename,concat('has',salary)) from emp;
++------------------------------------+
+| concat(ename,concat('has',salary)) |
++------------------------------------+
+| kinghas50000                       |
+| johnhas45000                       |
+| jayhas40000                        |
+| Rajhas25000                        |
++------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> select upper(ename)from emp;
++--------------+
+| upper(ename) |
++--------------+
+| KING         |
+| JOHN         |
+| JAY          |
+| RAJ          |
++--------------+
+4 rows in set (0.00 sec)
+
+mysql> select lower(ename) from emp;
++--------------+
+| lower(ename) |
++--------------+
+| king         |
+| john         |
+| jay          |
+| raj          |
++--------------+
+4 rows in set (0.00 sec)
+
+mysql> select substr(ename,1,3) from emp;
++-------------------+
+| substr(ename,1,3) |
++-------------------+
+| kin               |
+| joh               |
+| jay               |
+| Raj               |
++-------------------+
+4 rows in set (0.00 sec)
+
+mysql> select instr(ename,'a') from emp;
++------------------+
+| instr(ename,'a') |
++------------------+
+|                0 |
+|                0 |
+|                2 |
+|                2 |
++------------------+
+4 rows in set (0.00 sec)
+
+mysql> select round(15.02,0);
++----------------+
+| round(15.02,0) |
++----------------+
+|             15 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select round (15.12,1);
++-----------------+
+| round (15.12,1) |
++-----------------+
+|            15.1 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select round (15.1232,3);
++-------------------+
+| round (15.1232,3) |
++-------------------+
+|            15.123 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select round (15.12,-1);
++------------------+
+| round (15.12,-1) |
++------------------+
+|               20 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select round (15.12,-2);
++------------------+
+| round (15.12,-2) |
++------------------+
+|                0 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select round (55.52,-1);
++------------------+
+| round (55.52,-1) |
++------------------+
+|               60 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select round (55.52,-2);
++------------------+
+| round (55.52,-2) |
++------------------+
+|              100 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select replace('o', 'a') from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') from emp' at line 1
+mysql> select replace('john', 'o', 'a');
++---------------------------+
+| replace('john', 'o', 'a') |
++---------------------------+
+| jahn                      |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> select length('Ojas');
++----------------+
+| length('Ojas') |
++----------------+
+|              4 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select left('account',2);
++-------------------+
+| left('account',2) |
++-------------------+
+| ac                |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select right('account',4);
++--------------------+
+| right('account',4) |
++--------------------+
+| ount               |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> selct LPAD('ojas',2,'tx');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selct LPAD('ojas',2,'tx')' at line 1
+mysql> selct LPAD('ojas',2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selct LPAD('ojas',2)' at line 1
+mysql> select LPAD('ojas',2,'tx');
++---------------------+
+| LPAD('ojas',2,'tx') |
++---------------------+
+| oj                  |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select LPAD('oj',4,'tx');
++-------------------+
+| LPAD('oj',4,'tx') |
++-------------------+
+| txoj              |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select RPAD('oj',4,'tx');
++-------------------+
+| RPAD('oj',4,'tx') |
++-------------------+
+| ojtx              |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select rtrim("Books   ");
++-------------------+
+| rtrim("Books   ") |
++-------------------+
+| Books             |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select ltrim("Books   ");
++-------------------+
+| ltrim("Books   ") |
++-------------------+
+| Books             |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select ltrim("    Books");
++--------------------+
+| ltrim("    Books") |
++--------------------+
+| Books              |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> select ltrim(" f   Books");
++---------------------+
+| ltrim(" f   Books") |
++---------------------+
+| f   Books           |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select date('02-07-1999  10-20-20');
++------------------------------+
+| date('02-07-1999  10-20-20') |
++------------------------------+
+| NULL                         |
++------------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select date('02-07-1999  10:20:20');
++------------------------------+
+| date('02-07-1999  10:20:20') |
++------------------------------+
+| NULL                         |
++------------------------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY);
++------------------------------------------+
+| DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY) |
++------------------------------------------+
+| 2024-10-10                               |
++------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select DATE_ADD(CURRENT_DATE(), INTERVAL 2 DAY);
++------------------------------------------+
+| DATE_ADD(CURRENT_DATE(), INTERVAL 2 DAY) |
++------------------------------------------+
+| 2024-10-11                               |
++------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select date_format(current_date , '%w %m %y');
++----------------------------------------+
+| date_format(current_date , '%w %m %y') |
++----------------------------------------+
+| 3 10 24                                |
++----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select date_format(2024-10-10'' , '%w %m %y');
+ERROR 1583 (42000): Incorrect parameters in the call to native function 'date_format'
+mysql> select date_format('2024-10-10' , '%w %m %y');
++----------------------------------------+
+| date_format('2024-10-10' , '%w %m %y') |
++----------------------------------------+
+| 4 10 24                                |
++----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select date_format(2024-10-10'' , '%Y %M %W');
+ERROR 1583 (42000): Incorrect parameters in the call to native function 'date_format'
+mysql> select date_format('2024-10-10' , '%Y %M %W');
++----------------------------------------+
+| date_format('2024-10-10' , '%Y %M %W') |
++----------------------------------------+
+| 2024 October Thursday                  |
++----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAYOFWEEK('2007-02-03');
++-------------------------+
+| DAYOFWEEK('2007-02-03') |
++-------------------------+
+|                       7 |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAYOFYEAR('2024-02-03')
+    -> ^C
+mysql> SELECT DAYOFYEAR('2024-02-03');
++-------------------------+
+| DAYOFYEAR('2024-02-03') |
++-------------------------+
+|                      34 |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAYOFYEAR('2004-02-03');
++-------------------------+
+| DAYOFYEAR('2004-02-03') |
++-------------------------+
+|                      34 |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DAYOFYEAR('2004-4-03');
++------------------------+
+| DAYOFYEAR('2004-4-03') |
++------------------------+
+|                     94 |
++------------------------+
+1 row in set (0.00 sec)
+
+mysql>
